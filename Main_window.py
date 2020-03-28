@@ -144,7 +144,7 @@ class Main_window:
             mid = len(array) // 2
             L = array[:mid]
             R = array[mid:]
-            start_index = self.pre_menu.unique_values.index(array[0])+1
+            start_index = self.pre_menu.unique_values.index(array[0])-1
             end_index = self.pre_menu.unique_values.index(array[len(array)-1])
 
             self.do_mergesort(L)
