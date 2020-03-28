@@ -23,15 +23,20 @@ class Main_window:
             self.draw_bars(self.pre_menu.unique_values)
             self.draw_gui()
 
-    def draw_bars(self, array):
+    def draw_bars(self, array, location=0):
         c = 1
-        pygame.draw.rect(self.window, (0, 0, 0), (0, 0, self.window_width-250, self.window_height))
+        pygame.draw.rect(self.window, (0, 0, 0), (0, 0, self.window_width - 250, self.window_height))
         for i in array:
             # dynamic bars
             pygame.draw.rect(self.window, (0, 102, 255), (10 + c * 3, 20, 2, i))
             c += 1
 
         pygame.display.update()
+
+        if location != 0:
+            loc = [int(i) for i in str(location)]
+            print(loc)
+
 
     def draw_gui(self):
         #start button
@@ -69,13 +74,13 @@ class Main_window:
             self.do_bubblesort(self.pre_menu.unique_values)
         elif self.pre_menu.sorting_algorithm == 1:
             self.do_quicksort(self.pre_menu.unique_values)
-        '''elif self.pre_menu.sorting_algorithm == 2:
-            self.do_insertionsort()
+        elif self.pre_menu.sorting_algorithm == 2:
+            self.do_insertionsort(self.pre_menu.unique_values)
         elif self.pre_menu.sorting_algorithm == 3:
-            self.do_swapsort()
+            self.do_swapsort(self.pre_menu.unique_values)
         elif self.pre_menu.sorting_algorithm == 4:
-            self.do_mergsort()
-        elif self.pre_menu.sorting_algorithm == 5:
+            self.do_mergesort(self.pre_menu.unique_values)
+        '''elif self.pre_menu.sorting_algorithm == 5:
             self.do_heapsort()'''
 
     def do_bubblesort(self, array):
@@ -93,7 +98,7 @@ class Main_window:
                 array[i], array[pivot] = array[pivot], array[i]
                 self.draw_bars(array)
                 pygame.display.update()
-                time.sleep(0.05)
+                time.sleep(0.03)
         array[pivot], array[begin] = array[begin], array[pivot]
         return pivot
 
@@ -109,6 +114,70 @@ class Main_window:
             _quicksort(array, pivot + 1, end)
 
         return _quicksort(array, begin, end)
+
+    def do_insertionsort(self, array):
+        for i in range(1, len(array)):
+            if array[i] < array[i-1]:
+                for j in range(i, 0, -1):
+                    if array[j] < array[j-1]:
+                        array[j], array[j-1] = array[j-1], array[j]
+                        self.draw_bars(array)
+                        pygame.display.update()
+
+    def do_swapsort(self, array):
+        is_sorted = False
+        c = 0
+        while not is_sorted:
+            index = sum(j <= array[c] for j in array)-1
+            if c == index:
+                c += 1
+                if c == len(array):
+                    is_sorted = True
+            elif array[index] == array[c]:
+                array[index-1], array[c] = array[c], array[index-1]
+                if c == index - 1:
+                    c += 1
+            else:
+                array[index], array[c] = array[c], array[index]
+
+            time.sleep(0.05)
+            self.draw_bars(array)
+            pygame.display.update()
+
+    def do_mergesort(self, array, divides=0, location=0):
+        if len(array) > 1:
+            mid = len(array) // 2
+            L = array[:mid]
+            R = array[mid:]
+
+            x = location*10
+            self.do_mergesort(L, divides + 1, x+1)
+            self.do_mergesort(R, divides + 1, x+3)
+
+            self.draw_bars(array, location)
+            pygame.display.update()
+            time.sleep(0.05)
+
+            i = j = k = 0
+
+            while i < len(L) and j < len(R):
+                if L[i] < R[j]:
+                    array[k] = L[i]
+                    i += 1
+                else:
+                    array[k] = R[j]
+                    j += 1
+                k += 1
+
+            while i < len(L):
+                array[k] = L[i]
+                i += 1
+                k += 1
+
+            while j < len(R):
+                array[k] = R[j]
+                j += 1
+                k += 1
 
 
 Main_window()
