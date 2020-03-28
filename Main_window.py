@@ -23,7 +23,7 @@ class Main_window:
             self.draw_bars(self.pre_menu.unique_values)
             self.draw_gui()
 
-    def draw_bars(self, array, location=0):
+    def draw_bars(self, array):
         c = 1
         pygame.draw.rect(self.window, (0, 0, 0), (0, 0, self.window_width - 250, self.window_height))
         for i in array:
@@ -32,11 +32,6 @@ class Main_window:
             c += 1
 
         pygame.display.update()
-
-        if location != 0:
-            loc = [int(i) for i in str(location)]
-            print(loc)
-
 
     def draw_gui(self):
         #start button
@@ -144,17 +139,18 @@ class Main_window:
             self.draw_bars(array)
             pygame.display.update()
 
-    def do_mergesort(self, array, divides=0, location=0):
+    def do_mergesort(self, array):
         if len(array) > 1:
             mid = len(array) // 2
             L = array[:mid]
             R = array[mid:]
+            start_index = self.pre_menu.unique_values.index(array[0])+1
+            end_index = self.pre_menu.unique_values.index(array[len(array)-1])
 
-            x = location*10
-            self.do_mergesort(L, divides + 1, x+1)
-            self.do_mergesort(R, divides + 1, x+3)
+            self.do_mergesort(L)
+            self.do_mergesort(R)
 
-            self.draw_bars(array, location)
+            self.draw_bars(self.pre_menu.unique_values[:start_index]+array+self.pre_menu.unique_values[end_index:])
             pygame.display.update()
             time.sleep(0.05)
 
