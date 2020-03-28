@@ -145,14 +145,10 @@ class Main_window:
             L = array[:mid]
             R = array[mid:]
             start_index = self.pre_menu.unique_values.index(array[0])-1
-            end_index = self.pre_menu.unique_values.index(array[len(array)-1])
+            end_index = self.pre_menu.unique_values.index(array[len(array)-1])+1
 
             self.do_mergesort(L)
             self.do_mergesort(R)
-
-            self.draw_bars(self.pre_menu.unique_values[:start_index]+array+self.pre_menu.unique_values[end_index:])
-            pygame.display.update()
-            time.sleep(0.05)
 
             i = j = k = 0
 
@@ -164,6 +160,9 @@ class Main_window:
                     array[k] = R[j]
                     j += 1
                 k += 1
+                self.draw_bars(self.pre_menu.unique_values[:start_index] + array + self.pre_menu.unique_values[end_index:])
+                pygame.display.update()
+                time.sleep(0.05)
 
             while i < len(L):
                 array[k] = L[i]
