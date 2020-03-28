@@ -1,5 +1,6 @@
 import pygame
 from Start_menu import Menu
+import time
 
 
 class Main_window:
@@ -7,8 +8,10 @@ class Main_window:
 
     def __init__(self):
         self.run = True
+        self.window_height = 1000
+        self.window_width = 1500
         self.pre_menu = Menu()
-        self.window = pygame.display.set_mode((1500, 1000))
+        self.window = pygame.display.set_mode((self.window_width, self.window_height))
         pygame.display.set_caption(self.pre_menu.list_of_sorting_algorithms[self.pre_menu.sorting_algorithm])
         self.run_window()
 
@@ -17,12 +20,13 @@ class Main_window:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.run = False
-            self.draw_bars()
+            self.draw_bars(self.pre_menu.unique_values)
             self.draw_gui()
 
-    def draw_bars(self):
+    def draw_bars(self, array):
         c = 1
-        for i in self.pre_menu.unique_values:
+        pygame.draw.rect(self.window, (0, 0, 0), (0, 0, self.window_width-250, self.window_height))
+        for i in array:
             # dynamic bars
             pygame.draw.rect(self.window, (0, 102, 255), (10 + c * 3, 20, 2, i))
             c += 1
@@ -31,10 +35,10 @@ class Main_window:
 
     def draw_gui(self):
         #start button
-        self.button("start", 1300, 30, 100, 30, (0, 0, 0), (0, 102, 255), (0, 150, 200), action=None)
+        self.button("start", self.window_width-200, 30, 100, 30, (0, 0, 0), (0, 102, 255), (0, 150, 200), self.do_sorting)
 
         #quit button
-        self.button("quit", 1300, 70, 100, 30, (0, 0, 0), (0, 102, 255), (0, 150, 200), self.quit_window)
+        self.button("quit", self.window_width-200, 70, 100, 30, (0, 0, 0), (0, 102, 255), (0, 150, 200), self.quit_window)
 
         pygame.display.update()
 
@@ -59,5 +63,52 @@ class Main_window:
 
     def quit_window(self):
         self.run = False
+
+    def do_sorting(self):
+        if self.pre_menu.sorting_algorithm == 0:
+            self.do_bubblesort(self.pre_menu.unique_values)
+        elif self.pre_menu.sorting_algorithm == 1:
+            self.do_quicksort(self.pre_menu.unique_values)
+        '''elif self.pre_menu.sorting_algorithm == 2:
+            self.do_insertionsort()
+        elif self.pre_menu.sorting_algorithm == 3:
+            self.do_swapsort()
+        elif self.pre_menu.sorting_algorithm == 4:
+            self.do_mergsort()
+        elif self.pre_menu.sorting_algorithm == 5:
+            self.do_heapsort()'''
+
+    def do_bubblesort(self, array):
+        for i in range(len(array)):
+            for j in range(0, len(array)-1, 1):
+                if array[j] > array[j+1]:
+                    array[j+1], array[j] = array[j], array[j+1]
+                self.draw_bars(array)
+
+    def partition(self, array, begin, end):
+        pivot = begin
+        for i in range(begin + 1, end + 1):
+            if array[i] <= array[begin]:
+                pivot += 1
+                array[i], array[pivot] = array[pivot], array[i]
+                self.draw_bars(array)
+                pygame.display.update()
+                time.sleep(0.05)
+        array[pivot], array[begin] = array[begin], array[pivot]
+        return pivot
+
+    def do_quicksort(self, array, begin=0, end=None):
+        if end is None:
+            end = len(array) - 1
+
+        def _quicksort(array, begin, end):
+            if begin >= end:
+                return
+            pivot = self.partition(array, begin, end)
+            _quicksort(array, begin, pivot - 1)
+            _quicksort(array, pivot + 1, end)
+
+        return _quicksort(array, begin, end)
+
 
 Main_window()
