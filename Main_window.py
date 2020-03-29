@@ -75,8 +75,8 @@ class Main_window:
             self.do_swapsort(self.pre_menu.unique_values)
         elif self.pre_menu.sorting_algorithm == 4:
             self.do_mergesort(self.pre_menu.unique_values)
-        '''elif self.pre_menu.sorting_algorithm == 5:
-            self.do_heapsort()'''
+        elif self.pre_menu.sorting_algorithm == 5:
+            self.do_heapsort(self.pre_menu.unique_values)
 
     def do_bubblesort(self, array):
         for i in range(len(array)):
@@ -139,16 +139,20 @@ class Main_window:
             self.draw_bars(array)
             pygame.display.update()
 
-    def do_mergesort(self, array):
+    def do_mergesort(self, array, add_array=None):
+        if add_array is None:
+            add_array = []
         if len(array) > 1:
             mid = len(array) // 2
             L = array[:mid]
             R = array[mid:]
             start_index = self.pre_menu.unique_values.index(array[0])-1
+            if start_index == -1:
+                start_index = 0
             end_index = self.pre_menu.unique_values.index(array[len(array)-1])+1
 
             self.do_mergesort(L)
-            self.do_mergesort(R)
+            self.do_mergesort(R, L)
 
             i = j = k = 0
 
@@ -160,7 +164,9 @@ class Main_window:
                     array[k] = R[j]
                     j += 1
                 k += 1
-                self.draw_bars(self.pre_menu.unique_values[:start_index] + array + self.pre_menu.unique_values[end_index:])
+                copy_values = self.copy_array(self.pre_menu.unique_values)
+                self.pre_menu.unique_values = copy_values[:start_index-len(add_array)] + add_array + array + copy_values[end_index:]
+                self.draw_bars(self.pre_menu.unique_values)
                 pygame.display.update()
                 time.sleep(0.05)
 
@@ -169,10 +175,46 @@ class Main_window:
                 i += 1
                 k += 1
 
+
             while j < len(R):
                 array[k] = R[j]
                 j += 1
                 k += 1
 
+    def copy_array(self, array):
+        copy_arr = array[:]
+        return copy_arr
+
+    def do_heapsort(self, array):
+
+        def heapify(array, n, i):
+            largest = i
+            l = 2 * i + 1
+            r = 2 * i + 2
+
+            if l < n and array[i] < array[l]:
+                largest = l
+
+            if r < n and array[largest] < array[r]:
+                largest = r
+
+            if largest != i:
+                array[i], array[largest] = array[largest], array[i]
+
+                time.sleep(0.05)
+                self.draw_bars(array)
+                pygame.display.update()
+
+                heapify(array, n, largest)
+
+        n = len(array)
+
+        for i in range(n, -1, -1):
+            heapify(array, n, i)
+
+        for i in range(n - 1, 0, -1):
+            array[i], array[0] = array[0], array[i]
+
+            heapify(array, i, 0)
 
 Main_window()
