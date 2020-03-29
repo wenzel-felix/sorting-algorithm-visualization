@@ -28,6 +28,9 @@ class Menu:
 
     def button_click(self):
         for i in range(self.slider.get()):
-            self.unique_values.append(random.randint(1, 800))
+            y = random.randint(1, 800)
+            while y in self.unique_values:
+                y = random.randint(1, 800)
+            self.unique_values.append(y)
         self.sorting_algorithm = self.list_of_sorting_algorithms.index(self.list_manager.get())
         self.master.destroy()
