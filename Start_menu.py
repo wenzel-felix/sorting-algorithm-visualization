@@ -4,11 +4,11 @@ import random
 
 class Menu:
 
-    unique_values = []
-    sorting_algorithm = 0
-    list_of_sorting_algorithms = ['bubblesort', 'quicksort', 'insertionsort', 'swapsort', 'mergesort', 'heapsort']
-
     def __init__(self):
+        self.unique_values = []
+        self.sorting_algorithm = 0
+        self.list_of_sorting_algorithms = ['bubblesort', 'quicksort', 'insertionsort', 'swapsort', 'mergesort', 'heapsort']
+
         self.master = Tk()
         self.master.maxsize(width=500, height=200)
 

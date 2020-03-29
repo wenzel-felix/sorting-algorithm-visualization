@@ -1,12 +1,13 @@
 import pygame
 from Start_menu import Menu
 import time
+from Instance_manager import Instance_manager
 
 
 class Main_window:
-    pygame.init()
 
     def __init__(self):
+        pygame.init()
         self.run = True
         self.window_height = 1000
         self.window_width = 1500
@@ -14,6 +15,7 @@ class Main_window:
         self.window = pygame.display.set_mode((self.window_width, self.window_height))
         pygame.display.set_caption(self.pre_menu.list_of_sorting_algorithms[self.pre_menu.sorting_algorithm])
         self.run_window()
+        pygame.quit()
 
     def run_window(self):
         while self.run:
@@ -217,4 +219,11 @@ class Main_window:
             heapify(array, i, 0)
 
 
-Main_window()
+def main():
+    run = True
+    while run:
+        Main_window()
+        run = Instance_manager().new_sorting
+
+
+main()
