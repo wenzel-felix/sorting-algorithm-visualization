@@ -74,7 +74,7 @@ class Main_window:
         elif self.pre_menu.sorting_algorithm == 3:
             self.do_swapsort(self.pre_menu.unique_values)
         elif self.pre_menu.sorting_algorithm == 4:
-            self.do_mergesort(self.pre_menu.unique_values)
+            self.do_mergesort(self.pre_menu.unique_values, 0, len(self.pre_menu.unique_values)-1)
         elif self.pre_menu.sorting_algorithm == 5:
             self.do_heapsort(self.pre_menu.unique_values)
 
@@ -139,51 +139,45 @@ class Main_window:
             self.draw_bars(array)
             pygame.display.update()
 
-    def do_mergesort(self, array, add_array=None):
-        if add_array is None:
-            add_array = []
-        if len(array) > 1:
-            mid = len(array) // 2
-            L = array[:mid]
-            R = array[mid:]
-            start_index = self.pre_menu.unique_values.index(array[0])-1
-            if start_index == -1:
-                start_index = 0
-            end_index = self.pre_menu.unique_values.index(array[len(array)-1])+1
+    def do_mergesort(self, array, l, r):
+        mid = (l + r) // 2
+        if l < r:
+            self.do_mergesort(array, l, mid)
+            self.do_mergesort(array, mid + 1, r)
+            self.merge(array, l, mid, mid + 1, r)
 
-            self.do_mergesort(L)
-            self.do_mergesort(R, L)
-
-            i = j = k = 0
-
-            while i < len(L) and j < len(R):
-                if L[i] < R[j]:
-                    array[k] = L[i]
-                    i += 1
-                else:
-                    array[k] = R[j]
-                    j += 1
-                k += 1
-                copy_values = self.copy_array(self.pre_menu.unique_values)
-                self.pre_menu.unique_values = copy_values[:start_index-len(add_array)] + add_array + array + copy_values[end_index:]
-                self.draw_bars(self.pre_menu.unique_values)
-                pygame.display.update()
-                time.sleep(0.05)
-
-            while i < len(L):
-                array[k] = L[i]
+    def merge(self, array, x1, y1, x2, y2):
+        i = x1
+        j = x2
+        temp = []
+        pygame.event.pump()
+        while i <= y1 and j <= y2:
+            time.sleep(0.01)
+            self.draw_bars(array)
+            pygame.display.update()
+            if array[i] < array[j]:
+                temp.append(array[i])
                 i += 1
-                k += 1
-
-
-            while j < len(R):
-                array[k] = R[j]
+            else:
+                temp.append(array[j])
                 j += 1
-                k += 1
-
-    def copy_array(self, array):
-        copy_arr = array[:]
-        return copy_arr
+        while i <= y1:
+            time.sleep(0.01)
+            self.draw_bars(array)
+            pygame.display.update()
+            temp.append(array[i])
+            i += 1
+        while j <= y2:
+            temp.append(array[j])
+            j += 1
+        j = 0
+        for i in range(x1, y2 + 1):
+            pygame.event.pump()
+            array[i] = temp[j]
+            j += 1
+            time.sleep(0.01)
+            self.draw_bars(array)
+            pygame.display.update()
 
     def do_heapsort(self, array):
 

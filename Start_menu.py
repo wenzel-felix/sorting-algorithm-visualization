@@ -6,7 +6,7 @@ class Menu:
 
     unique_values = []
     sorting_algorithm = 0
-    list_of_sorting_algorithms = ['bubblesort', 'quicksort', 'insertionsort', 'swapsort', 'mergsort', 'heapsort']
+    list_of_sorting_algorithms = ['bubblesort', 'quicksort', 'insertionsort', 'swapsort', 'mergesort', 'heapsort']
 
     def __init__(self):
         self.master = Tk()
