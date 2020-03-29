@@ -79,10 +79,13 @@ class Main_window:
             self.do_heapsort(self.pre_menu.unique_values)
 
     def do_bubblesort(self, array):
-        for i in range(len(array)):
+        run = True
+        while run:
+            run = False
             for j in range(0, len(array)-1, 1):
                 if array[j] > array[j+1]:
                     array[j+1], array[j] = array[j], array[j+1]
+                    run = True
                 self.draw_bars(array)
 
     def partition(self, array, begin, end):
@@ -126,18 +129,20 @@ class Main_window:
             index = sum(j <= array[c] for j in array)-1
             if c == index:
                 c += 1
-                if c == len(array):
+                if c == len(array) - 1:
                     is_sorted = True
             elif array[index] == array[c]:
                 array[index-1], array[c] = array[c], array[index-1]
+                time.sleep(0.05)
+                self.draw_bars(array)
+                pygame.display.update()
                 if c == index - 1:
                     c += 1
             else:
                 array[index], array[c] = array[c], array[index]
-
-            time.sleep(0.05)
-            self.draw_bars(array)
-            pygame.display.update()
+                time.sleep(0.05)
+                self.draw_bars(array)
+                pygame.display.update()
 
     def do_mergesort(self, array, l, r):
         mid = (l + r) // 2
@@ -146,12 +151,12 @@ class Main_window:
             self.do_mergesort(array, mid + 1, r)
             self.merge(array, l, mid, mid + 1, r)
 
-    def merge(self, array, x1, y1, x2, y2):
-        i = x1
-        j = x2
+    def merge(self, array, l_start, l_end, r_start, r_end):
+        i = l_start
+        j = r_start
         temp = []
         pygame.event.pump()
-        while i <= y1 and j <= y2:
+        while i <= l_end and j <= r_end:
             time.sleep(0.01)
             self.draw_bars(array)
             pygame.display.update()
@@ -161,17 +166,17 @@ class Main_window:
             else:
                 temp.append(array[j])
                 j += 1
-        while i <= y1:
+        while i <= l_end:
             time.sleep(0.01)
             self.draw_bars(array)
             pygame.display.update()
             temp.append(array[i])
             i += 1
-        while j <= y2:
+        while j <= r_end:
             temp.append(array[j])
             j += 1
         j = 0
-        for i in range(x1, y2 + 1):
+        for i in range(l_start, r_end + 1):
             pygame.event.pump()
             array[i] = temp[j]
             j += 1
@@ -210,5 +215,6 @@ class Main_window:
             array[i], array[0] = array[0], array[i]
 
             heapify(array, i, 0)
+
 
 Main_window()
